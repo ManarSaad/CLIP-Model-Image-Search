@@ -29,22 +29,13 @@ st.write("Enter a caption and get the closest image")
 
 for idx, img in enumerate(images):
     st.image(img, caption=f"Image {idx+1}")
-
-# Get user input
 caption = st.text_input("Enter a caption:")
 
 if caption:
-    # Preprocess the input
     inputs = processor_two(text=[caption], images=images, return_tensors="pt", padding=True)
-    
-    # Get the logits
     outputs = model_two(**inputs)
     logits_per_image = outputs.logits_per_image
     probs = logits_per_image.softmax(dim=1)  # probabilities
-
-    # Find the image with the highest probability
     best_image_idx = torch.argmax(logits_per_image).item()
-    
-    # Display the best matching image
     st.write("Best matching image:")
     st.image(images[best_image_idx], caption=f"Best match for '{caption}'")
