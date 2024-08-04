@@ -21,7 +21,7 @@ urls = [
 images = [
     Image.open(requests.get(url, stream=True).raw) for url in urls]
 
-model_two = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
+model_two = CLIPModel.from_pretrained("openai/clip-vit-base-patch32") # model that can understand images and text together.
 processor_two = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
 
 st.title("CLIP Model Image Retrivel")
@@ -34,7 +34,7 @@ caption = st.text_input("Enter a caption:")
 if caption:
     inputs = processor_two(text=[caption], images=images, return_tensors="pt", padding=True)
     outputs = model_two(**inputs)
-    logits_per_image = outputs.logits_per_image
+    logits_per_image = outputs.logits_per_image # similarities between the image embeddings and the text embeddings 
     probs = logits_per_image.softmax(dim=1)  # probabilities
     best_image_idx = torch.argmax(logits_per_image).item()
     st.write("Best matching image:")
